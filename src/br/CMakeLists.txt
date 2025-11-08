@@ -2,6 +2,7 @@
 
 add_executable (gcr
   Broker.cpp
+  CompatTest.cpp
   BusClient.cpp
   Bus.cpp
   CircularQueue.cpp

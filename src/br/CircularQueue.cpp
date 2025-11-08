@@ -18,12 +18,12 @@ namespace GuideCraft {
     uint32_t q_pos = counter.load() & (QUEUE_SIZE - 1);
     QueueElem *q_elem = &(queue[q_pos]);
     
-    q_elem->lock.lock();
+    q_elem->lock.lockWrite();
     q_elem->elem.sz = usermem_el->sz;
     std::memcpy(q_elem->elem.msg, usermem_el->msg, q_elem->elem.sz);
     q_elem->elem.empty = false;
     counter++;
-    q_elem->lock.unlock(); 
+    q_elem->lock.unlockWrite(); 
 
     return true;
   }

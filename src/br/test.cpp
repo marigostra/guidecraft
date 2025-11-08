@@ -16,9 +16,9 @@ namespace GuideCraft {
 
     void test::write(void* shmem, void* usrmem, size_t size) 
     {
-       lock.lock(); 
+       lock.lockWrite(); 
        std::memcpy(shmem, usrmem, size);
-       lock.unlock();
+       lock.unlockWrite();
     }
 
 

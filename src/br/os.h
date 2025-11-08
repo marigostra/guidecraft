@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0
+// Copyright 2024-2025 Michael Pozhidaev <msp@luwrain.org>
 
 #pragma once
 
@@ -10,9 +12,12 @@
 #include<thread>
 #include <mutex>
 #include <condition_variable>
+#include<cstring>
+#include<cerrno>
+#include<functional>
 
 #include <sys/mman.h>
 #include <sys/stat.h>        /* For mode constants */
-#include <fcntl.h>           /* For O_* constants */
-#include<errno.h>
+#include <fcntl.h>
 #include <unistd.h>
+#include<sys/wait.h>
