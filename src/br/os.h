@@ -15,6 +15,7 @@
 #include<cstring>
 #include<cerrno>
 #include<functional>
+#include<chrono>
 
 #include <sys/mman.h>
 #include <sys/stat.h>        /* For mode constants */
