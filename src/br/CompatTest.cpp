@@ -56,66 +56,57 @@ void CompatTest::init()
   cout << "Sync data block created" << endl;
 }
 
-
 void CompatTest::close()
 {
-  /*
-
-
-    if (shmdt(ptr) == -1) {
-        perror("shmdt");
-        exit(1);
-    }
-    */
 }
 
-  void CompatTest::run()
-  {
-    init();
-    const pid_t pid = fork();
-    if (pid == (pid_t)-1)
-      throw runtime_error(string("fork: ") + strerror(errno));
-    if (pid != 0)
+void CompatTest::run()
+{
+  init();
+  const pid_t pid = fork();
+  if (pid == (pid_t)-1)
+    throw runtime_error(string("fork: ") + strerror(errno));
+  if (pid != 0)
     cout << "Child process pid is " << pid << endl;
-    if (pid == 0)
-      {
-	cout << "Starting the child process" << endl;
-
-	      const int shmFd = shm_open(SHM_NAME, O_RDWR, 0600);
-  if (shmFd == -1)
-    throw runtime_error(string("shm_open: ") + strerror(errno));
-  void* const ptr = mmap(NULL, SHM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, shmFd, 0);
-  if (ptr == MAP_FAILED)
+  if (pid == 0)
     {
-      string info = strerror(errno);
-      ::close(shmFd);
-      throw runtime_error("mmap: " + info);
-    }
-  ::close(shmFd);
-  struct SyncData* const syncData = (struct SyncData*)ptr;
-
-  while(1)
-    {
-
-            if (pthread_mutex_lock(&syncData->lock) != 0)
-	throw runtime_error("pthread_mutex_lock() failed");
-	    while(syncData->event < 0)
-	      if (pthread_cond_wait(&syncData->cond, &syncData->lock) != 0)
-		throw runtime_error("pthread_cond_wait() failed");
-	    const int event = syncData->event;
-      syncData->event = -1;
-      if (pthread_mutex_unlock(&syncData->lock) != 0)
-	    	throw runtime_error("pthread_mutex_unlock() failed");
-      	    cout << "Catching " << event << endl;
-	    if (event == 9)
-	      {
-		cout << "Exiting the child process, caught 10 events" << endl;
-	exit(EXIT_SUCCESS);      
-    }
-      }
-      }
-
+      cout << "Starting the child process" << endl;
+      
       const int shmFd = shm_open(SHM_NAME, O_RDWR, 0600);
+      if (shmFd == -1)
+	throw runtime_error(string("shm_open: ") + strerror(errno));
+      void* const ptr = mmap(NULL, SHM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, shmFd, 0);
+      if (ptr == MAP_FAILED)
+	{
+	  string info = strerror(errno);
+	  ::close(shmFd);
+	  throw runtime_error("mmap: " + info);
+	}
+      ::close(shmFd);
+      struct SyncData* const syncData = (struct SyncData*)ptr;
+      
+      while(1)
+	{
+	  
+	  if (pthread_mutex_lock(&syncData->lock) != 0)
+	    throw runtime_error("pthread_mutex_lock() failed");
+	  while(syncData->event < 0)
+	    if (pthread_cond_wait(&syncData->cond, &syncData->lock) != 0)
+	      throw runtime_error("pthread_cond_wait() failed");
+	  const int event = syncData->event;
+	  syncData->event = -1;
+	  if (pthread_mutex_unlock(&syncData->lock) != 0)
+	    throw runtime_error("pthread_mutex_unlock() failed");
+	  cout << "Catching " << event << endl;
+	  if (event == 9)
+	    {
+	      cout << "Exiting the child process, caught 10 events" << endl;
+	      exit(EXIT_SUCCESS);      
+	    }
+	}
+    }
+  
+  const int shmFd = shm_open(SHM_NAME, O_RDWR, 0600);
   if (shmFd == -1)
     throw runtime_error(string("shm_open: ") + strerror(errno));
   void* const ptr = mmap(NULL, SHM_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, shmFd, 0);
@@ -136,16 +127,16 @@ void CompatTest::close()
       if (pthread_cond_signal(&syncData->cond) != 0)
 	throw runtime_error("pthread_cond_signal() failed");
       if (pthread_mutex_unlock(&syncData->lock) != 0)
-	    	throw runtime_error("pthread_mutex_unlock() failed");
-this_thread::sleep_for(std::chrono::seconds(1));
+	throw runtime_error("pthread_mutex_unlock() failed");
+      this_thread::sleep_for(std::chrono::seconds(1));
     }
-
   
-    cout << "Waiting" << endl;
-    int exitCode;
-    wait(&exitCode);
-    cout << "Finished" << endl;
-    cout << exitCode << endl;
-
-    
-  }
+  
+  cout << "Waiting" << endl;
+  int exitCode;
+  wait(&exitCode);
+  cout << "Finished" << endl;
+  cout << exitCode << endl;
+  
+  
+}
