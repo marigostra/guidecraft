@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0
+// SPDX-License-Identifier: BUSL-1.1
 // Copyright 2024-2025 Michael Pozhidaev <msp@luwrain.org>
 
 #include "os.h"
@@ -36,18 +36,18 @@ void CompatTest::init()
       throw runtime_error("mmap: " + info);
     }
   ::close(shmFd);
-  pthread_condattr_t condattr;
+  pthread_condattr_t condAttr;
   pthread_mutexattr_t lockattr;
-  if (pthread_condattr_init(&condattr) != 0)
+  if (pthread_condattr_init(&condAttr) != 0)
     throw runtime_error("pthread_condattr_init() failed");
   if (pthread_mutexattr_init(&lockattr) != 0)
     throw runtime_error("pthread_mutex_init() failed");
-  if (pthread_condattr_setpshared(&condattr, PTHREAD_PROCESS_SHARED) != 0)
+  if (pthread_condattr_setpshared(&condAttr, PTHREAD_PROCESS_SHARED) != 0)
     throw runtime_error("pthread_condattr_setpshared() failed");
   if (pthread_mutexattr_setpshared(&lockattr, PTHREAD_PROCESS_SHARED) != 0)
     throw runtime_error("pthread_mutexattr_setpshared() failed");
   struct SyncData* syncData = (struct SyncData*)ptr;
-  if (pthread_cond_init(&syncData->cond, &condattr) != 0)
+  if (pthread_cond_init(&syncData->cond, &condAttr) != 0)
     throw runtime_error("pthread_cond_init() failed");
   if (pthread_mutex_init(&syncData->lock, &lockattr) != 0)
     throw runtime_error("pthread_mutex_init() failed");

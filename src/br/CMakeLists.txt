@@ -7,6 +7,7 @@ add_executable (gcr
   Bus.cpp
   CircularQueue.cpp
   Client.cpp
+  Funcs.cpp
   main.cpp
   Service.cpp
   Message.cpp

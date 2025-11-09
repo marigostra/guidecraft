@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0
+// SPDX-License-Identifier: BUSL-1.1
 // Copyright 2024-2025 Michael Pozhidaev <msp@luwrain.org>
 // Copyright 2024 Andrey Cheprasov <andreycheprasov54@gmail.com>
 
